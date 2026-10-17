@@ -27,6 +27,7 @@ cp -r .next/static .next/standalone/.next/
 echo "→ Starting with PM2 on port $PORT"
 command -v pm2 >/dev/null || npm i -g pm2
 set -a; source .env; set +a
+export GIT_SHA="${GIT_SHA:-$(git rev-parse HEAD 2>/dev/null || echo dev)}"
 PORT="$PORT" HOSTNAME=127.0.0.1 pm2 startOrReload deploy/ecosystem.config.cjs --update-env
 pm2 save
 

@@ -9,6 +9,7 @@ module.exports = {
         NODE_ENV: "production",
         PORT: process.env.PORT || 3010,
         HOSTNAME: process.env.HOSTNAME || "127.0.0.1",
+        GIT_SHA: process.env.GIT_SHA || "dev",
       },
       max_memory_restart: "600M",
     },
