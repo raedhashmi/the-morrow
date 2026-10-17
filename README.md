@@ -4,6 +4,10 @@ A personal morning newspaper. The Morrow learns what each reader cares about, ga
 
 Built for the **NaSCon '26** hackathon problem statement "Build a personal morning paper".
 
+![CI/CD](https://github.com/OWNER/the-morrow/actions/workflows/ci-cd.yml/badge.svg)
+
+**→ Full setup (keys, GitHub, CI/CD, VPS, news providers): [docs/SETUP.md](docs/SETUP.md)**
+
 ![Architecture](docs/architecture.png)
 
 ## What's inside
@@ -33,6 +37,15 @@ npm run dev
 ```
 Set `MORROW_FIXTURES=1` to use clearly-labelled sample stories when you're offline.
 
+## Quality & CI/CD
+```bash
+npm run lint && npm run typecheck && npm test
+```
+GitHub Actions runs lint, typecheck and unit tests, then migrates a real Postgres, builds, boots the server and smoke-tests it, then deploys to the VPS over SSH on `main`. CodeQL and Dependabot run alongside. Details in [docs/SETUP.md](docs/SETUP.md#4-cicd-pipeline).
+
+## News sources
+Curated RSS (BBC, Guardian, Dawn, Ars Technica, HN, NASA…) and Google News search work with no keys. The Guardian, GNews and NewsAPI switch on when their keys are set. See [docs/SETUP.md](docs/SETUP.md#5-real-news-providers).
+
 ## Deploy to a VPS (Ubuntu)
 ```bash
 sudo bash deploy/setup-postgres.sh 'a-strong-db-password'   # prints DATABASE_URL
@@ -50,9 +63,12 @@ src/
   app/(app)/         paper, archive, saved, settings (signed-in shell)
   app/onboarding/    setup wizard
   app/api/           editions, interactions, PDF, cron, username check, Auth.js
-  server/            edition engine, sources, learning, AI editor, PDF, email
+  server/            edition engine, sources, providers, learning, AI editor, PDF, email
+  lib/               shared helpers (unit-tested in tests/)
   components/        UI kit (shadcn-style), reader, auth, onboarding, settings
 prisma/              schema + migrations
 deploy/              deploy script, PM2, Nginx, crontab, Postgres setup
-docs/                architecture diagram
+docs/                architecture diagram, setup guide
+tests/               Vitest unit tests
+.github/             CI/CD, CodeQL, Dependabot
 ```
