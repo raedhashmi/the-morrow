@@ -111,6 +111,8 @@ crontab -e
 # add:  5 * * * * curl -fsS -H "Authorization: Bearer YOUR_CRON_SECRET" https://YOUR_DOMAIN/api/cron/daily > /dev/null
 ```
 
+**Using `create-nextjs-domain.sh` instead of steps 5–6:** it works as-is, because `npm start -- --port <port>` loads `.env`, runs migrations and starts the standalone server on that port. Answer its prompts with the absolute app folder, PM2 name `the-morrow`, port `3010`, and your domain. After that, `bash deploy/deploy.sh` (or the CI/CD deploy) reloads the same PM2 process.
+
 If the VPS already runs other sites on PM2/Nginx, nothing here touches them: the app has its own PM2 name (`the-morrow`), port (3010) and Nginx site file. Change `PORT` in `deploy/deploy.sh` and `deploy/nginx.conf` together if 3010 is taken.
 
 ---
