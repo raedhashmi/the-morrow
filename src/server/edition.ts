@@ -1,6 +1,7 @@
 import "server-only";
 import { db } from "@/lib/db";
 import { todayIn } from "@/lib/utils";
+import { normTitle } from "@/lib/text";
 import { DEPTHS, TOPICS, TOPIC_BY_ID, topicLabel } from "@/lib/topics";
 import { gather, type Candidate } from "./sources";
 import { editEdition } from "./ai";
@@ -9,7 +10,7 @@ import { loadFixtures } from "./fixtures";
 
 type Scored = Candidate & { score: number; serendipity: boolean; matched: string[] };
 
-const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ").trim();
+const norm = normTitle;
 
 function hashString(s: string) {
   let h = 0;

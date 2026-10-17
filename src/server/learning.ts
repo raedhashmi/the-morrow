@@ -2,6 +2,8 @@ import "server-only";
 import { db } from "@/lib/db";
 import type { InteractionType, InterestKind } from "@/generated/prisma/client";
 import { topicLabel } from "@/lib/topics";
+import { salientWords } from "@/lib/text";
+
 
 /**
  * How each reader action nudges the interest model.
@@ -21,35 +23,6 @@ const EFFECTS: Record<InteractionType, { topic: number; source: number; keyword:
 
 const MIN = 0;
 const MAX = 5;
-
-const STOP = new Set(
-  "a an the and or but of to in on for with at by from as is are was were be been has have had will would can could should may might this that these those it its into over after before about than then there their they them his her she he you your our we us not no new says say said how why what who when where which amid more most up out off just".split(
-    " ",
-  ),
-);
-
-/**
- * Salient entities in a headline: proper nouns and acronyms ("Babar Azam",
- * "OpenAI", "SBP"), never stop-words. These make far better
- * learned interests than generic words like "changed" or "numbers".
- */
-export function salientWords(title: string, n = 2): string[] {
-  const tokens = title.replace(/[\u2018\u2019'"“”:;,.!?()[\]]/g, " ").split(/\s+/).filter(Boolean);
-  const out: string[] = [];
-  // Title Case headlines capitalise everything — then trust only acronyms and camelCase.
-  const capRatio = tokens.filter((t) => /^[A-Z]/.test(t)).length / Math.max(1, tokens.length);
-  const titleCase = capRatio > 0.6;
-  for (let i = 0; i < tokens.length; i++) {
-    const t = tokens[i];
-    const clean = t.toLowerCase().replace(/[^a-z0-9-]/g, "");
-    if (clean.length < 3 || STOP.has(clean) || /^\d+$/.test(clean)) continue;
-    const acronym = /^[A-Z][A-Z0-9]{1,5}$/.test(t) || /^[a-z]+[A-Z]/.test(t) || /^[A-Z][a-z]+[A-Z]/.test(t);
-    // The first word is capitalised anyway, so only an acronym counts there.
-    const proper = acronym || (i > 0 && !titleCase && /^[A-Z][a-z]+[A-Za-z0-9-]*$/.test(t));
-    if (proper && !out.includes(clean)) out.push(clean);
-  }
-  return out.slice(0, n);
-}
 
 async function bump(userId: string, kind: InterestKind, label: string, delta: number, createIfMissing: boolean) {
   if (!label || delta === 0) return;

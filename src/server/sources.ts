@@ -1,5 +1,7 @@
 import "server-only";
 import Parser from "rss-parser";
+import { clip, stripHtml } from "@/lib/text";
+import { fetchProviders } from "./providers";
 
 export type Candidate = {
   title: string;
@@ -41,22 +43,6 @@ async function fetchFeed(url: string) {
     console.warn(`[sources] ${url} failed: ${(err as Error).message}`);
     return { at: Date.now(), items: [] as Item[], title: "" };
   }
-}
-
-const stripHtml = (s: string) =>
-  s
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&#39;|&apos;/g, "'")
-    .replace(/&quot;/g, '"')
-    .replace(/\s+/g, " ")
-    .trim();
-
-function clip(s: string, n: number) {
-  if (s.length <= n) return s;
-  const cut = s.slice(0, n);
-  return cut.slice(0, cut.lastIndexOf(" ")) + "…";
 }
 
 function prettySource(feedTitle: string, url: string) {
@@ -146,6 +132,9 @@ export async function gather(opts: {
       ),
     );
   }
+
+  // Keyed news APIs (Guardian, GNews, NewsAPI) — only those with keys configured run.
+  jobs.push(fetchProviders(opts));
 
   const settled = await Promise.allSettled(jobs);
   return settled.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
