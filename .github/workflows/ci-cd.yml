@@ -97,7 +97,7 @@ jobs:
       url: ${{ vars.APP_URL }}
     steps:
       - name: Pull, migrate, build and reload on the server
-        uses: appleboy/ssh-action@v1.2.0
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
