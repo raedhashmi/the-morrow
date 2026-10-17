@@ -1,0 +1,193 @@
+// The Morrow — data model
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ReadingDepth {
+  BRIEF
+  STANDARD
+  DEEP
+}
+
+enum InterestKind {
+  TOPIC
+  SOURCE
+  KEYWORD
+}
+
+enum InterestOrigin {
+  ONBOARDING
+  LEARNED
+}
+
+enum InteractionType {
+  OPEN
+  LIKE
+  DISLIKE
+  SKIP
+  SAVE
+  HIDE_TOPIC
+  RECALL_CORRECT
+  RECALL_WRONG
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  username      String?   @unique
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+
+  // Personalisation
+  onboarded     Boolean      @default(false)
+  persona       String?
+  readingDepth  ReadingDepth @default(STANDARD)
+  region        String       @default("US")
+  city          String?
+  timezone      String       @default("Asia/Karachi")
+  deliveryHour  Int          @default(7)
+  emailDaily    Boolean      @default(true)
+  emailSecurity Boolean      @default(true)
+  mutedWords    String[]     @default([])
+  streak        Int          @default(0)
+  lastReadDate  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accounts     Account[]
+  sessions     Session[]
+  interests    Interest[]
+  editions     Edition[]
+  interactions Interaction[]
+  resetTokens  PasswordResetToken[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  expires   DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+/// A weighted signal about what the reader cares about.
+/// Topics come from onboarding; sources and keywords are learned from behaviour.
+model Interest {
+  id        String         @id @default(cuid())
+  userId    String
+  kind      InterestKind   @default(TOPIC)
+  label     String
+  weight    Float          @default(1)
+  origin    InterestOrigin @default(ONBOARDING)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, kind, label])
+  @@index([userId, weight])
+}
+
+model Edition {
+  id         String    @id @default(cuid())
+  userId     String
+  date       String // YYYY-MM-DD in the reader's timezone
+  number     Int
+  headline   String
+  editorNote String
+  weather    String?
+  takeaways  Json?
+  emailedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  articles   Article[]
+
+  @@unique([userId, date])
+  @@index([userId, createdAt])
+}
+
+model Article {
+  id          String    @id @default(cuid())
+  editionId   String
+  section     String
+  rank        Int
+  isLead      Boolean   @default(false)
+  serendipity Boolean   @default(false)
+  title       String
+  url         String
+  source      String
+  topic       String
+  summary     String
+  whyHere     String
+  imageUrl    String?
+  publishedAt DateTime?
+  readMinutes Int       @default(3)
+  score       Float     @default(0)
+  edition     Edition   @relation(fields: [editionId], references: [id], onDelete: Cascade)
+  interactions Interaction[]
+
+  @@index([editionId, section, rank])
+}
+
+model Interaction {
+  id        String          @id @default(cuid())
+  userId    String
+  articleId String?
+  type      InteractionType
+  topic     String?
+  source    String?
+  createdAt DateTime        @default(now())
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article   Article?        @relation(fields: [articleId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([articleId])
+}

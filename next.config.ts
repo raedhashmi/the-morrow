@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Cache Components stays off: every page renders dynamically per reader.
+  cacheComponents: false,
+  output: "standalone",
+  serverExternalPackages: ["@react-pdf/renderer", "pg", "rss-parser"],
+  images: { remotePatterns: [{ protocol: "https", hostname: "**" }] },
 };
 
 export default nextConfig;

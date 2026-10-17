@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 800" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#6b1832"/>
+    </marker>
+    <linearGradient id="hdr" x1="0" x2="1"><stop offset="0" stop-color="#8b1e3f"/><stop offset="1" stop-color="#4a1226"/></linearGradient>
+    <style>
+      .box{fill:#fff;stroke:#c9a3ad;stroke-width:1.2}
+      .zone{fill:#fbf3ee;stroke:#e5cdd3;stroke-width:1}
+      .t{font-size:13px;font-weight:700;fill:#2c0e19}
+      .s{font-size:11px;fill:#6b5a5e}
+      .z{font-size:11px;font-weight:700;letter-spacing:2px;fill:#8b1e3f}
+      .l{font-size:10.5px;fill:#6b1832;font-style:italic}
+      .ln{stroke:#6b1832;stroke-width:1.4;fill:none;marker-end:url(#a)}
+      .dash{stroke-dasharray:5 4}
+    </style>
+  </defs>
+  <rect width="1240" height="800" fill="#fffaf6"/>
+  <rect width="1240" height="64" fill="url(#hdr)"/>
+  <text x="32" y="41" font-family="Georgia, serif" font-size="26" fill="#f8efe4">The Morrow — System Architecture</text>
+  <text x="1208" y="40" text-anchor="end" font-size="12" fill="#e3c08d">Next.js 16 · Prisma 7 · PostgreSQL · Auth.js · Resend · Claude</text>
+
+  <!-- Client -->
+  <rect class="zone" x="24" y="88" width="250" height="460" rx="14"/>
+  <text class="z" x="40" y="112">READER'S BROWSER</text>
+  <g>
+    <rect class="box" x="40" y="128" width="218" height="58" rx="10"/><text class="t" x="54" y="152">Sign up / Sign in</text><text class="s" x="54" y="170">username · email · password · Google</text>
+    <rect class="box" x="40" y="198" width="218" height="58" rx="10"/><text class="t" x="54" y="222">Onboarding wizard</text><text class="s" x="54" y="240">persona · topics ♥ · keywords · rhythm</text>
+    <rect class="box" x="40" y="268" width="218" height="72" rx="10"/><text class="t" x="54" y="292">Edition reader</text><text class="s" x="54" y="310">click-through · like · skip · save</text><text class="s" x="54" y="326">hide topic · "Three things" recall</text>
+    <rect class="box" x="40" y="352" width="218" height="58" rx="10"/><text class="t" x="54" y="376">Archive · Saved</text><text class="s" x="54" y="394">every past edition, streaks</text>
+    <rect class="box" x="40" y="422" width="218" height="58" rx="10"/><text class="t" x="54" y="446">Settings</text><text class="s" x="54" y="464">"What your paper has learned"</text>
+    <rect class="box" x="40" y="492" width="218" height="40" rx="10"/><text class="t" x="54" y="517">PDF download</text>
+  </g>
+
+  <!-- Server -->
+  <rect class="zone" x="310" y="88" width="560" height="620" rx="14"/>
+  <text class="z" x="326" y="112">NEXT.JS APP ON VPS  (PM2 + NGINX)</text>
+  <rect class="box" x="326" y="128" width="250" height="58" rx="10"/><text class="t" x="340" y="152">proxy.ts — auth gate</text><text class="s" x="340" y="170">protects /paper /archive /settings</text>
+  <rect class="box" x="596" y="128" width="258" height="58" rx="10"/><text class="t" x="610" y="152">Auth.js v5 (JWT)</text><text class="s" x="610" y="170">Credentials (bcrypt) + Google OAuth</text>
+  <rect class="box" x="326" y="198" width="528" height="58" rx="10"/><text class="t" x="340" y="222">Server Actions &amp; Route Handlers</text><text class="s" x="340" y="240">/api/editions · /api/interactions · /api/editions/[id]/pdf · /api/cron/daily · onboarding &amp; settings actions</text>
+
+  <rect x="326" y="272" width="528" height="262" rx="12" fill="#fff" stroke="#8b1e3f" stroke-width="1.6"/>
+  <text class="z" x="342" y="296">PAPER ENGINE  (src/server/edition.ts)</text>
+  <rect class="box" x="342" y="310" width="118" height="92" rx="9"/><text class="t" x="352" y="332">1 · Gather</text><text class="s" x="352" y="350">curated RSS +</text><text class="s" x="352" y="365">Google News per</text><text class="s" x="352" y="380">topic / keyword /</text><text class="s" x="352" y="395">city (20-min cache)</text>
+  <rect class="box" x="470" y="310" width="118" height="92" rx="9"/><text class="t" x="480" y="332">2 · Rank</text><text class="s" x="480" y="350">topic + source +</text><text class="s" x="480" y="365">keyword weights,</text><text class="s" x="480" y="380">recency, dedupe,</text><text class="s" x="480" y="395">muted words</text>
+  <rect class="box" x="598" y="310" width="118" height="92" rx="9"/><text class="t" x="608" y="332">3 · Compose</text><text class="s" x="608" y="350">quotas by weight,</text><text class="s" x="608" y="365">front page, sections,</text><text class="s" x="608" y="380">2 × "Beyond your</text><text class="s" x="608" y="395">bubble" stories</text>
+  <rect class="box" x="726" y="310" width="114" height="92" rx="9"/><text class="t" x="736" y="332">4 · Edit</text><text class="s" x="736" y="350">Claude writes</text><text class="s" x="736" y="365">headline, note,</text><text class="s" x="736" y="380">summaries, why-here,</text><text class="s" x="736" y="395">3 takeaways*</text>
+  <path class="ln" d="M460 356h10"/><path class="ln" d="M588 356h10"/><path class="ln" d="M716 356h10"/>
+  <rect class="box" x="342" y="420" width="240" height="98" rx="9"/><text class="t" x="356" y="442">Learning loop</text><text class="s" x="356" y="460">open +0.15 · like +0.35 · save +0.25</text><text class="s" x="356" y="476">skip −0.06 · dislike −0.3 · hide −2</text><text class="s" x="356" y="492">learns sources + named entities;</text><text class="s" x="356" y="508">bubble likes add new topics; decay</text>
+  <rect class="box" x="598" y="420" width="242" height="98" rx="9"/><text class="t" x="612" y="442">PDF renderer</text><text class="s" x="612" y="460">@react-pdf/renderer → A4 broadsheet:</text><text class="s" x="612" y="476">masthead, banner, lead + image,</text><text class="s" x="612" y="492">editor's box, 3-column sections,</text><text class="s" x="612" y="508">clickable links, page numbers</text>
+  <path class="ln dash" d="M462 420V402"/>
+
+  <rect class="box" x="326" y="552" width="258" height="64" rx="10"/><text class="t" x="340" y="576">Hourly cron (crontab → curl)</text><text class="s" x="340" y="594">prints papers at each reader's hour,</text><text class="s" x="340" y="608">in their timezone, then emails</text>
+  <rect class="box" x="600" y="552" width="254" height="64" rx="10"/><text class="t" x="614" y="576">Email service (src/server/email.ts)</text><text class="s" x="614" y="594">welcome · every sign-in · paper ready</text><text class="s" x="614" y="608">password reset · password changed</text>
+  <text class="s" x="326" y="690">* AI editor is optional — without ANTHROPIC_API_KEY the engine uses heuristic summaries and reasons.</text>
+
+  <!-- Data & external -->
+  <rect class="zone" x="906" y="88" width="310" height="620" rx="14"/>
+  <text class="z" x="922" y="112">DATA &amp; SERVICES</text>
+  <rect class="box" x="922" y="128" width="278" height="150" rx="10"/><text class="t" x="936" y="152">PostgreSQL via Prisma 7 (pg adapter)</text>
+  <text class="s" x="936" y="174">User — prefs, depth, tz, streak, muted</text><text class="s" x="936" y="190">Account / Session (Auth.js adapter)</text><text class="s" x="936" y="206">Interest — TOPIC · SOURCE · KEYWORD, weight</text><text class="s" x="936" y="222">Edition — date, no., headline, note, takeaways</text><text class="s" x="936" y="238">Article — section, rank, why-here, score</text><text class="s" x="936" y="254">Interaction — OPEN, LIKE, SKIP, SAVE…</text><text class="s" x="936" y="270">PasswordResetToken</text>
+  <rect class="box" x="922" y="298" width="278" height="58" rx="10"/><text class="t" x="936" y="322">News sources</text><text class="s" x="936" y="340">BBC · Guardian · Dawn · Ars · HN · NASA…</text>
+  <rect class="box" x="922" y="372" width="278" height="58" rx="10"/><text class="t" x="936" y="396">Anthropic API (Claude)</text><text class="s" x="936" y="414">editorial layer, one call per edition</text>
+  <rect class="box" x="922" y="446" width="278" height="58" rx="10"/><text class="t" x="936" y="470">Google OAuth</text><text class="s" x="936" y="488">Sign in with Google</text>
+  <rect class="box" x="922" y="520" width="278" height="58" rx="10"/><text class="t" x="936" y="544">Resend</text><text class="s" x="936" y="562">transactional email delivery</text>
+
+  <!-- arrows -->
+  <path class="ln" d="M258 157h68"/><text class="l" x="270" y="150">HTTPS</text>
+  <path class="ln" d="M258 227h68"/>
+  <path class="ln" d="M258 304h68"/><text class="l" x="262" y="298">signals</text>
+  <path class="ln" d="M258 512H300V440h42"/>
+  <path class="ln" d="M854 157h34V475h34"/>
+  <path class="ln" d="M854 212h68"/>
+  <path class="ln" d="M840 330h82"/><text class="l" x="850" y="324">fetch</text>
+  <path class="ln" d="M840 390h82"/>
+  <path class="ln" d="M854 584h50V549h18"/>
+  <path class="ln" d="M455 552V518"/>
+  <path class="ln dash" d="M584 590h16"/>
+
+  <rect x="24" y="724" width="1192" height="56" rx="12" fill="#2c0e19"/>
+  <text x="44" y="748" font-size="12" fill="#e3c08d" font-weight="700" letter-spacing="2">DAILY FLOW</text>
+  <text x="44" y="768" font-size="12.5" fill="#f8efe4">cron fires → gather &amp; rank with learned weights → Claude edits → edition saved → Resend email → reader taps &amp; skips → weights update → better paper tomorrow</text>
+</svg>
